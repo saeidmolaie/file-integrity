@@ -13,8 +13,6 @@ internal class FileIntegrity
 
 	public static string ResolveChecksum(string filePath, ChecksumHashingMethod checksumHashingMethod)
 	{
-		ValidateFile(filePath);
-
 		var controller =
 				ResolveController(checksumHashingMethod);
 
@@ -23,12 +21,26 @@ internal class FileIntegrity
 
 	public static bool ValidateChecksum(string filePath, string checksum, ChecksumHashingMethod checksumHashingMethod)
 	{
-		ValidateFile(filePath);
-
 		var controller =
 				ResolveController(checksumHashingMethod);
 
 		return controller.ValidateChecksum(filePath, checksum);
+	}
+
+	public static string ResolveChecksum(FileStream fileStream, ChecksumHashingMethod checksumHashingMethod)
+	{
+		var controller =
+				ResolveController(checksumHashingMethod);
+
+		return controller.ResolveChecksum(fileStream);
+	}
+
+	public static bool ValidateChecksum(FileStream fileStream, string checksum, ChecksumHashingMethod checksumHashingMethod)
+	{
+		var controller =
+				ResolveController(checksumHashingMethod);
+
+		return controller.ValidateChecksum(fileStream, checksum);
 	}
 
 	private static IFileChecksumController ResolveController(ChecksumHashingMethod method)
@@ -38,14 +50,5 @@ internal class FileIntegrity
 				$"Hashing method {method} is not supported.");
 
 		return factory();
-	}
-
-	private static void ValidateFile(string filePath)
-	{
-		if (string.IsNullOrWhiteSpace(filePath))
-			throw new ArgumentNullException(nameof(filePath));
-
-		if (!File.Exists(filePath))
-			throw new FileNotFoundException("File not found.", filePath);
 	}
 }
