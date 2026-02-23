@@ -19,13 +19,13 @@ internal class FileSHA256ChecksumController : FileChecksumController
 		using var sha256 = SHA256.Create();
 		var hashBytes = sha256.ComputeHash(stream);
 
-		var builder = new StringBuilder(hashBytes.Length * 2);
+		var stringBuilder = new StringBuilder(hashBytes.Length * 2);
 
 		foreach (var bytes in hashBytes)
 		{
-			builder.Append(bytes.ToString("x2"));
+			stringBuilder.Append(bytes.ToString("x2"));
 		}
 
-		return builder.ToString();
+		return stringBuilder.ToString();
 	}
 }
